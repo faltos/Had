@@ -17,29 +17,27 @@ public class SnakeView extends View {
 
     private Bitmap[] bmp;
 
-    private int lx = 10;
-    private int ly = 10;
+    private int lx = 16;
+    private int ly = 12;
 
     private int width;
     private int height;
 
-    private final int initialHeroPos2 = 46;
-    private int currentHeroPos = 55;
-    private int newHeroPos = currentHeroPos;
-    private int possibleNext = currentHeroPos;
+    private final int initialHeroPos2 = 14;
+    private int currentHeroPos = 14;
+    private int newSnakePosition = currentHeroPos;
 
     private final int EMPTY = 0;
     private final int WALL = 1;
-    private final int BOX = 2;
+    private final int APPLE = 2;
     private final int GOAL = 3;
-    private final int HERO = 4;
+    private final int SNAKE = 4;
     private final int BOXOK = 5;
 
-    Integer level1[] = new Integer[100];
+    Integer level1[] = new Integer[192];
 
     Integer level2[] = new Integer[100];
 
-    Integer[] currentLevel;
     Integer[] levelGame;
 
     public SnakeView(Context context) {
@@ -62,9 +60,9 @@ public class SnakeView extends View {
 
         bmp[0] = BitmapFactory.decodeResource(getResources(), R.drawable.empty);
         bmp[1] = BitmapFactory.decodeResource(getResources(), R.drawable.wall);
-        bmp[2] = BitmapFactory.decodeResource(getResources(), R.drawable.box);
+        bmp[2] = BitmapFactory.decodeResource(getResources(), R.drawable.apple);
         bmp[3] = BitmapFactory.decodeResource(getResources(), R.drawable.goal);
-        bmp[4] = BitmapFactory.decodeResource(getResources(), R.drawable.hero);
+        bmp[4] = BitmapFactory.decodeResource(getResources(), R.drawable.snake);
         bmp[5] = BitmapFactory.decodeResource(getResources(), R.drawable.boxok);
 
     }
@@ -78,10 +76,9 @@ public class SnakeView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         for (int i = 0; i < lx; i++) {
             for (int j = 0; j < ly; j++) {
-                canvas.drawBitmap(bmp[levelGame[i * 10 + j]], null,
+                canvas.drawBitmap(bmp[levelGame[i * ly + j]], null,
                         new Rect(j * width, i * height, (j + 1) * width, (i + 1) * height), null);
             }
         }
@@ -89,46 +86,26 @@ public class SnakeView extends View {
     }
 
     public void moveRight(){
-        if(currentHeroPos%10 != 9){
-            newHeroPos = currentHeroPos + 1;
-            if(newHeroPos%10 != 9){
-                possibleNext = newHeroPos + 1;
-            } else {
-                possibleNext = -1;
-            }
+        if(currentHeroPos% + 1 < 192){
+            newSnakePosition = currentHeroPos + 1;
         }
     }
 
     public void moveLeft(){
-        if(currentHeroPos%10 != 0){
-            newHeroPos = currentHeroPos - 1;
-            if(newHeroPos%10 != 0){
-                possibleNext = newHeroPos - 1;
-            } else {
-                possibleNext = -1;
-            }
+        if(currentHeroPos - 1 >= 0){
+            newSnakePosition = currentHeroPos - 1;
         }
     }
 
     public void moveUp(){
-        if(currentHeroPos/10 != 0){
-            newHeroPos = currentHeroPos - 10;
-            if(newHeroPos/10 != 0){
-                possibleNext = newHeroPos - 10;
-            } else {
-                possibleNext = -1;
-            }
+        if(currentHeroPos-12 >= 0){
+            newSnakePosition = currentHeroPos - 12;
         }
     }
 
     public void moveDown(){
-        if(currentHeroPos/10 != 9){
-            newHeroPos = currentHeroPos + 10;
-            if(newHeroPos/10 != 9){
-                possibleNext = newHeroPos + 10;
-            } else {
-                possibleNext = -1;
-            }
+        if(currentHeroPos+12 < 192){
+            newSnakePosition = currentHeroPos + 12;
         }
     }
 
@@ -139,7 +116,7 @@ public class SnakeView extends View {
 
     public boolean isEndOfGame(){
         for(int i = 0; i < levelGame.length; i++){
-            if(levelGame[i] == GOAL || levelGame[i] == BOX){
+            if(levelGame[i] == GOAL || levelGame[i] == APPLE){
                 return false;
             }
         }
@@ -147,35 +124,21 @@ public class SnakeView extends View {
     }
 
     public void setLevel2(){
-        currentLevel = Arrays.copyOf(level2, level2.length);
-        levelGame = Arrays.copyOf(currentLevel, currentLevel.length);
+        //levelGame = Arrays.copyOf(currentLevel, currentLevel.length);
         currentHeroPos = initialHeroPos2;
         redraw();
     }
 
     private void processHeroMovement(){
         // new is wall
-        if(isWallOnPos(newHeroPos)){
+        if(isWallOnPos(newSnakePosition)){
             return;
-        }
-        // new is box or boxok
-        if(isAnyBoxOnPos(newHeroPos)){
-            // can't move the box
-            if(possibleNext == -1 || isWallOnPos(possibleNext) || isAnyBoxOnPos(possibleNext)){
-                return;
-            }
-            // can move the box
-            if(levelGame[possibleNext] == GOAL){
-                levelGame[possibleNext] = BOXOK;
-            } else {
-                levelGame[possibleNext] = BOX;
-            }
         }
 
         // hero movement
-        levelGame[currentHeroPos] = currentLevel[currentHeroPos] == GOAL? GOAL : EMPTY;
-        levelGame[newHeroPos] = HERO;
-        currentHeroPos = newHeroPos;
+        levelGame[currentHeroPos] = EMPTY;
+        levelGame[newSnakePosition] = SNAKE;
+        currentHeroPos = newSnakePosition;
     }
 
     private void redraw(){
@@ -190,7 +153,7 @@ public class SnakeView extends View {
     }
 
     private boolean isAnyBoxOnPos(int pos){
-        if(levelGame[pos] == BOX || levelGame[pos] == BOXOK){
+        if(levelGame[pos] == APPLE || levelGame[pos] == BOXOK){
             return true;
         }
         return false;

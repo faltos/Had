@@ -22,24 +22,33 @@ public class MainActivity extends Activity implements SimpleGestureListener {
     private SnakeView gameView;
     private TextView infoText;
 
-    private final String level1Text = "0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
-            "0, 0, 0, 1, 1, 1, 0, 0, 0, 0,\n" +
-            "0, 0, 0, 1, 3, 1, 0, 0, 0, 0,\n" +
-            "0, 0, 0, 1, 0, 1, 1, 1, 1, 0,\n" +
-            "0, 1, 1, 1, 2, 0, 2, 3, 1, 0,\n" +
-            "0, 1, 3, 0, 2, 4, 1, 1, 1, 0,\n" +
-            "0, 1, 1, 1, 1, 2, 1, 0, 0, 0,\n" +
-            "0, 0, 0, 0, 1, 3, 1, 0, 0, 0,\n" +
-            "0, 0, 0, 0, 1, 1, 1, 0, 0, 0,\n" +
-            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0";
+    private final String level1Text =
+            "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,\n" +
+            "1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1";
 
-    private final String level2Text = "1, 1, 1, 1, 1, 1, 1, 1, 1, 0,\n" +
+    private final String level2Text =
+            "1, 1, 1, 1, 1, 1, 1, 1, 1, 0,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 1, 0,\n" +
             "1, 0, 2, 3, 3, 2, 1, 0, 1, 0,\n" +
             "1, 0, 1, 3, 2, 3, 2, 0, 1, 0,\n" +
             "1, 0, 2, 3, 3, 2, 4, 0, 1, 0,\n" +
             "1, 0, 1, 3, 2, 3, 2, 0, 1, 0,\n" +
             "1, 0, 2, 3, 3, 2, 1, 0, 1, 0,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 1, 0,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 1, 0,\n" +
             "1, 1, 1, 1, 1, 1, 1, 1, 1, 0,\n" +
             "0, 0, 0, 0, 0, 0, 0, 0, 0, 0";
@@ -66,8 +75,8 @@ public class MainActivity extends Activity implements SimpleGestureListener {
             e.printStackTrace();
         }
 
-        gameView.currentLevel = Arrays.copyOf(gameView.level1, gameView.level1.length);
-        gameView.levelGame = Arrays.copyOf(gameView.currentLevel, gameView.currentLevel.length);
+        gameView.levelGame = Arrays.copyOf(gameView.level1, gameView.level1.length);
+        //gameView.levelGame = Arrays.copyOf(gameView.currentLevel, gameView.currentLevel.length);
 
         // info
         infoText = (TextView)findViewById(R.id.info_text);
