@@ -181,6 +181,7 @@ public class MainActivity extends Activity implements SimpleGestureListener {
                 gameView.updateScore = false;
             }
 
+            gameView.starSpawning();
             gameView.moveSnake();
             gameView.update();
             handlerForMove.postDelayed(this, gameView.speed);

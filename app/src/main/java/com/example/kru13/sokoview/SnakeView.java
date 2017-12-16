@@ -28,6 +28,12 @@ public class SnakeView extends View {
     private final int initialSnakePosition = 14;
     private int currentSnakePosition = 14;
     private int newSnakePosition = currentSnakePosition;
+    private int timeToNextStar = -1;
+    private int timeToClearStar;
+    private int starPosition;
+    private boolean starSpawned = false;
+    private boolean starTaken = false;
+    private boolean starTimerAppleEat = false;
 
     private final int EMPTY = 0;
     private final int WALL = 1;
@@ -37,8 +43,9 @@ public class SnakeView extends View {
 
     public boolean updateScore = false;
     public char typeOfMove = 'R'; // Up, Down, Left, Right
-    public int speed = 1000;
+    public int speed = 200;
     public int score = 0;
+
 
     public ArrayList<Integer> snakeBody = new ArrayList<>();
 
@@ -143,16 +150,63 @@ public class SnakeView extends View {
         redraw();
     }
 
+    public void starSpawning (){
+        if(starSpawned == false && ((snakeBody.size() % 5) == 0) && starTimerAppleEat == true) {
+            timeToNextStar = ThreadLocalRandom.current().nextInt(20, 30 + 1);
+            starTimerAppleEat = false;
+            Log.d("starSpawning", String.valueOf(snakeBody.size()));
+        }
+        if(starSpawned == false) {
+            if (timeToNextStar == 0) {
+                Log.d("starSpawningCreate", String.valueOf(timeToNextStar));
+                int randomNum = 0;
+                while (true) {
+                    randomNum = ThreadLocalRandom.current().nextInt(0, 192 + 1);
+                    if (levelGame[randomNum] == EMPTY) break;
+                }
+                levelGame[randomNum] = STAR;
+                starPosition = randomNum;
+                timeToClearStar = 20;
+                starSpawned = true;
+                timeToNextStar--;
+            } else {
+                timeToNextStar--;
+                Log.d("starSpawningMinus", String.valueOf(timeToNextStar));
+            }
+        }else {
+            if (timeToClearStar == 0){
+                if(starTaken == false) {
+                    levelGame[starPosition] = EMPTY;
+                }
+                starTaken = false;
+                starSpawned = false;
+            }
+            else {
+                timeToClearStar--;
+            }
+        }
+    }
+
     private void processSnakeMovement(){
         // new is wall
         if(isWallOnPosition(newSnakePosition)){
             return;
         }
 
+        if(isSnakeOnPosition(newSnakePosition)){
+            return;
+        }
+
+        if(isStarOnPosition(newSnakePosition)){
+            updateScore = true;
+            score = score + 5;
+            starTaken = true;
+        }
+
         if(isAppleOnPosition(newSnakePosition)){
+            starTimerAppleEat = true;
             updateScore = true;
             score++;
-            Log.d("Apple", "Method");
             int randomNum = 0;
 
             while (true){
@@ -177,7 +231,6 @@ public class SnakeView extends View {
                 snakeBody.set(i, snakeBody.get(i-1));
             }
         }
-        Log.d("rewriteSnakeBody", String.valueOf(snakeBody.size()));
         snakeBody.set(0, headPosition);
     }
 
@@ -194,6 +247,20 @@ public class SnakeView extends View {
 
     private boolean isAppleOnPosition(int pos){
         if(levelGame[pos] == APPLE){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isSnakeOnPosition(int pos){
+        if(levelGame[pos] == SNAKE){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isStarOnPosition(int pos){
+        if(levelGame[pos] == STAR){
             return true;
         }
         return false;
