@@ -1,5 +1,7 @@
 package com.example.kru13.sokoview;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +23,8 @@ import java.util.Arrays;
 public class MainActivity extends Activity implements SimpleGestureListener {
 
     Handler handlerForMove = new Handler();
+
+    private boolean pauseGame = false;
 
     private SimpleGestureFilter detector;
     private SnakeView gameView;
@@ -133,8 +137,19 @@ public class MainActivity extends Activity implements SimpleGestureListener {
     //level 2 when double tapped on screen
     @Override
     public void onDoubleTap() {
-        infoText.setText("Level 2");
-        gameView.setLevel2();
+        handlerForMove.removeCallbacks(runnableCode);
+        new AlertDialog.Builder(this)
+                .setTitle("Pause")
+                .setMessage("Press 'continue' to continue")
+                .setCancelable(false)
+                .setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handlerForMove.post(runnableCode);
+                    }
+                }).show();
+        //infoText.setText("Level 2");
+        //gameView.setLevel2();
     }
 
     private void saveLevel(String filePath, String fileText) throws IOException {
