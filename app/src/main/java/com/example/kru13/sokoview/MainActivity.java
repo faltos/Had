@@ -1,8 +1,10 @@
 package com.example.kru13.sokoview;
 
+import android.os.Handler;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
@@ -18,6 +20,8 @@ import java.util.Arrays;
 
 public class MainActivity extends Activity implements SimpleGestureListener {
 
+    Handler handlerForMove = new Handler();
+
     private SimpleGestureFilter detector;
     private SnakeView gameView;
     private TextView infoText;
@@ -32,7 +36,7 @@ public class MainActivity extends Activity implements SimpleGestureListener {
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
-            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
@@ -80,11 +84,11 @@ public class MainActivity extends Activity implements SimpleGestureListener {
 
         // info
         infoText = (TextView)findViewById(R.id.info_text);
-        infoText.setText("Level 1");
+        infoText.setText("Level: 1  Score: 0");
 
         // Detect touched area
         detector = new SimpleGestureFilter(MainActivity.this, this);
-
+        handlerForMove.post(runnableCode);
     }
 
     @Override
@@ -99,25 +103,29 @@ public class MainActivity extends Activity implements SimpleGestureListener {
 
         //Detect the swipe gestures and move
         switch (direction) {
-
             case SimpleGestureFilter.SWIPE_RIGHT:
-                gameView.moveRight();
+                if(gameView.typeOfMove != 'L')gameView.typeOfMove = 'R';
+                else return;
+                //gameView.moveRight();
                 break;
             case SimpleGestureFilter.SWIPE_LEFT:
-                gameView.moveLeft();
+                if(gameView.typeOfMove != 'R')gameView.typeOfMove = 'L';
+                else return;
+                //gameView.moveLeft();
                 break;
             case SimpleGestureFilter.SWIPE_DOWN:
-                gameView.moveDown();
+                if(gameView.typeOfMove != 'U')gameView.typeOfMove = 'D';
+                else return;
+                //gameView.moveDown();
                 break;
             case SimpleGestureFilter.SWIPE_UP:
-                gameView.moveUp();
+                if(gameView.typeOfMove != 'D')gameView.typeOfMove = 'U';
+                else return;
+                //gameView.moveUp();
                 break;
+        }
 
-        }
         gameView.update();
-        if(gameView.isEndOfGame()){
-            infoText.setText("Winner!!!");
-        }
     }
 
     //level 2 when double tapped on screen
@@ -161,6 +169,22 @@ public class MainActivity extends Activity implements SimpleGestureListener {
         reader.close();
         return arrayLevel;
     }
+
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+
+            if(gameView.updateScore == true) {
+                infoText.setText("Level: 1  Score: " + gameView.score);
+                gameView.updateScore = false;
+                Log.d("Apple", "Text");
+            }
+
+            gameView.moveSnake();
+            gameView.update();
+            handlerForMove.postDelayed(this, gameView.speed);
+        }
+    };
 
 }
 

@@ -6,9 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
-
-import java.util.Arrays;
 
 /**
  * Created by kru13 on 12.10.16.
@@ -23,16 +22,20 @@ public class SnakeView extends View {
     private int width;
     private int height;
 
-    private final int initialHeroPos2 = 14;
-    private int currentHeroPos = 14;
-    private int newSnakePosition = currentHeroPos;
+    private final int initialSnakePosition = 14;
+    private int currentSnakePosition = 14;
+    private int newSnakePosition = currentSnakePosition;
 
     private final int EMPTY = 0;
     private final int WALL = 1;
     private final int APPLE = 2;
-    private final int GOAL = 3;
+    private final int STAR = 3;
     private final int SNAKE = 4;
-    private final int BOXOK = 5;
+
+    public boolean updateScore = false;
+    public char typeOfMove = 'R'; // Up, Down, Left, Right
+    public int speed = 2000;
+    public int score = 0;
 
     Integer level1[] = new Integer[192];
 
@@ -56,15 +59,13 @@ public class SnakeView extends View {
     }
 
     void init(Context context) {
-        bmp = new Bitmap[6];
+        bmp = new Bitmap[5];
 
         bmp[0] = BitmapFactory.decodeResource(getResources(), R.drawable.empty);
         bmp[1] = BitmapFactory.decodeResource(getResources(), R.drawable.wall);
         bmp[2] = BitmapFactory.decodeResource(getResources(), R.drawable.apple);
-        bmp[3] = BitmapFactory.decodeResource(getResources(), R.drawable.goal);
+        bmp[3] = BitmapFactory.decodeResource(getResources(), R.drawable.star);
         bmp[4] = BitmapFactory.decodeResource(getResources(), R.drawable.snake);
-        bmp[5] = BitmapFactory.decodeResource(getResources(), R.drawable.boxok);
-
     }
 
     @Override
@@ -85,75 +86,89 @@ public class SnakeView extends View {
 
     }
 
+    public void moveSnake(){
+        switch (typeOfMove) {
+            case 'R':
+                moveRight();
+                break;
+            case 'L':
+                moveLeft();
+                break;
+            case 'D':
+                moveDown();
+                break;
+            case 'U':
+                moveUp();
+                break;
+        }
+    }
+
     public void moveRight(){
-        if(currentHeroPos% + 1 < 192){
-            newSnakePosition = currentHeroPos + 1;
+        if(currentSnakePosition % + 1 < 192){
+            newSnakePosition = currentSnakePosition + 1;
         }
     }
 
     public void moveLeft(){
-        if(currentHeroPos - 1 >= 0){
-            newSnakePosition = currentHeroPos - 1;
+        if(currentSnakePosition - 1 >= 0){
+            newSnakePosition = currentSnakePosition - 1;
         }
     }
 
     public void moveUp(){
-        if(currentHeroPos-12 >= 0){
-            newSnakePosition = currentHeroPos - 12;
+        if(currentSnakePosition -12 >= 0){
+            newSnakePosition = currentSnakePosition - 12;
         }
     }
 
     public void moveDown(){
-        if(currentHeroPos+12 < 192){
-            newSnakePosition = currentHeroPos + 12;
+        if(currentSnakePosition +12 < 192){
+            newSnakePosition = currentSnakePosition + 12;
         }
     }
 
     public void update(){
-        processHeroMovement();
+        processSnakeMovement();
         redraw();
-    }
-
-    public boolean isEndOfGame(){
-        for(int i = 0; i < levelGame.length; i++){
-            if(levelGame[i] == GOAL || levelGame[i] == APPLE){
-                return false;
-            }
-        }
-        return true;
     }
 
     public void setLevel2(){
         //levelGame = Arrays.copyOf(currentLevel, currentLevel.length);
-        currentHeroPos = initialHeroPos2;
+        currentSnakePosition = initialSnakePosition;
         redraw();
     }
 
-    private void processHeroMovement(){
+    private void processSnakeMovement(){
         // new is wall
-        if(isWallOnPos(newSnakePosition)){
+        if(isWallOnPosition(newSnakePosition)){
             return;
         }
 
+        if(isAppleOnPosition(newSnakePosition)){
+            updateScore = true;
+            score++;
+            Log.d("Apple", "Method");
+        }
+
         // hero movement
-        levelGame[currentHeroPos] = EMPTY;
+        levelGame[currentSnakePosition] = EMPTY;
         levelGame[newSnakePosition] = SNAKE;
-        currentHeroPos = newSnakePosition;
+        currentSnakePosition = newSnakePosition;
     }
 
     private void redraw(){
         this.invalidate();
     }
 
-    private boolean isWallOnPos(int pos){
+    private boolean isWallOnPosition(int pos){
         if(levelGame[pos] == WALL){
             return true;
         }
         return false;
     }
 
-    private boolean isAnyBoxOnPos(int pos){
-        if(levelGame[pos] == APPLE || levelGame[pos] == BOXOK){
+    private boolean isAppleOnPosition(int pos){
+        if(levelGame[pos] == APPLE){
             return true;
         }
         return false;
