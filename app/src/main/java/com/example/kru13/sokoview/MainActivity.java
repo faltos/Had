@@ -86,6 +86,8 @@ public class MainActivity extends Activity implements SimpleGestureListener {
         infoText = (TextView)findViewById(R.id.info_text);
         infoText.setText("Level: 1  Score: 0");
 
+        gameView.snakeBody.add(14);
+
         // Detect touched area
         detector = new SimpleGestureFilter(MainActivity.this, this);
         handlerForMove.post(runnableCode);
@@ -125,7 +127,7 @@ public class MainActivity extends Activity implements SimpleGestureListener {
                 break;
         }
 
-        gameView.update();
+        //gameView.update();
     }
 
     //level 2 when double tapped on screen
@@ -177,7 +179,6 @@ public class MainActivity extends Activity implements SimpleGestureListener {
             if(gameView.updateScore == true) {
                 infoText.setText("Level: 1  Score: " + gameView.score);
                 gameView.updateScore = false;
-                Log.d("Apple", "Text");
             }
 
             gameView.moveSnake();

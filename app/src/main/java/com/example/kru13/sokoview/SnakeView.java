@@ -9,6 +9,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Created by kru13 on 12.10.16.
  */
@@ -34,8 +37,10 @@ public class SnakeView extends View {
 
     public boolean updateScore = false;
     public char typeOfMove = 'R'; // Up, Down, Left, Right
-    public int speed = 2000;
+    public int speed = 1000;
     public int score = 0;
+
+    public ArrayList<Integer> snakeBody = new ArrayList<>();
 
     Integer level1[] = new Integer[192];
 
@@ -148,12 +153,32 @@ public class SnakeView extends View {
             updateScore = true;
             score++;
             Log.d("Apple", "Method");
+            int randomNum = 0;
+
+            while (true){
+                randomNum = ThreadLocalRandom.current().nextInt(0, 192 + 1);
+                if(levelGame[randomNum] == EMPTY) break;
+            }
+            snakeBody.add(snakeBody.get(snakeBody.size() - 1));
+            levelGame[randomNum] = APPLE;
         }
 
-        // hero movement
-        levelGame[currentSnakePosition] = EMPTY;
+        levelGame[snakeBody.get(snakeBody.size() - 1)] = EMPTY;
         levelGame[newSnakePosition] = SNAKE;
+
+        rewriteSnakeBody(newSnakePosition);
+
         currentSnakePosition = newSnakePosition;
+    }
+
+    private void rewriteSnakeBody(int headPosition){
+        if(snakeBody.size() > 1){
+            for(int i = snakeBody.size() - 1; i>0; i--){
+                snakeBody.set(i, snakeBody.get(i-1));
+            }
+        }
+        Log.d("rewriteSnakeBody", String.valueOf(snakeBody.size()));
+        snakeBody.set(0, headPosition);
     }
 
     private void redraw(){
