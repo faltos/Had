@@ -2,6 +2,7 @@ package com.example.kru13.sokoview;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.app.Activity;
@@ -213,8 +214,6 @@ public class MainActivity extends Activity implements SimpleGestureListener {
                         handlerForMove.post(runnableCode);
                     }
                 }).show();
-        //infoText.setText("Level 2");
-        //gameView.setLevel2();
     }
 
     private void saveLevel(String filePath, String fileText) throws IOException {
@@ -264,9 +263,28 @@ public class MainActivity extends Activity implements SimpleGestureListener {
             gameView.starSpawning();
             gameView.moveSnake();
             gameView.update();
+            if(gameView.endGame == true){
+                endGame();
+            }
             handlerForMove.postDelayed(this, gameView.speed);
         }
     };
+
+    private void endGame() {
+        handlerForMove.removeCallbacks(runnableCode);
+        new AlertDialog.Builder(this)
+                .setTitle("End game")
+                .setMessage("Your score " + gameView.score)
+                .setCancelable(false)
+                .setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handlerForMove.post(runnableCode);
+                        Intent settingsActivity = new Intent(getApplicationContext(), SettingsActivity.class);
+                        startActivity(settingsActivity);
+                    }
+                }).show();
+    }
 
 }
 

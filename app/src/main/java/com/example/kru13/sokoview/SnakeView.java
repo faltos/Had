@@ -45,6 +45,9 @@ public class SnakeView extends View {
     private final int STAR = 3;
     private final int SNAKE = 4;
 
+    public boolean soundOn = true;
+    public boolean vibrationOn = true;
+    public boolean endGame = false;
     public boolean updateScore = false;
     public char typeOfMove = 'R'; // Up, Down, Left, Right
     public int speed = 200;
@@ -138,6 +141,7 @@ public class SnakeView extends View {
     public void moveLeft(){
         newSnakePosition = currentSnakePosition - 1;
         if(newSnakePosition % 12 == 11)newSnakePosition = newSnakePosition + 12;
+        if(newSnakePosition == -1)newSnakePosition = 11;
     }
 
     public void moveUp(){
@@ -199,27 +203,26 @@ public class SnakeView extends View {
     }
 
     private void processSnakeMovement(){
-        // new is wall
         if(isWallOnPosition(newSnakePosition)){
-            vibration.vibrate(500);
+            endGame = true;
             return;
         }
 
         if(isSnakeOnPosition(newSnakePosition)){
-            vibration.vibrate(500);
+            endGame = true;
             return;
         }
 
         if(isStarOnPosition(newSnakePosition)){
-            vibration.vibrate(500);
+            if(vibrationOn)vibration.vibrate(500);
             updateScore = true;
             score = score + 5;
             starTaken = true;
         }
 
         if(isAppleOnPosition(newSnakePosition)){
-            vibration.vibrate(500);
-            mp.start();
+            if(vibrationOn)vibration.vibrate(500);
+            if(soundOn)mp.start();
             starTimerAppleEat = true;
             updateScore = true;
             score++;
