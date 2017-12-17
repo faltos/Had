@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -81,8 +82,8 @@ public class SettingsActivity extends AppCompatActivity {
                 Bundle dataBundle = new Bundle();
                 dataBundle.putInt("speed", speed);
                 dataBundle.putInt("level", level);
-                dataBundle.putBoolean("sound", soundOn);
-                dataBundle.putBoolean("vibration", vibrationOn);
+                dataBundle.putBoolean("sound", ((Switch) findViewById(R.id.switchSound)).isChecked());
+                dataBundle.putBoolean("vibration", ((Switch) findViewById(R.id.switchVibration)).isChecked());
                 Intent gameActivity = new Intent(getApplicationContext(), MainActivity.class);
                 gameActivity.putExtras(dataBundle);
                 startActivity(gameActivity);
