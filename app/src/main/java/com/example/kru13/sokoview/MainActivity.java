@@ -2,6 +2,7 @@ package com.example.kru13.sokoview;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +21,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
 public class MainActivity extends Activity implements SimpleGestureListener {
+
+
 
     Handler handlerForMove = new Handler();
 
@@ -31,6 +35,24 @@ public class MainActivity extends Activity implements SimpleGestureListener {
     private TextView infoText;
 
     private final String level1Text =
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0";
+
+    private final String level2Text =
             "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,\n" +
             "1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
@@ -47,19 +69,6 @@ public class MainActivity extends Activity implements SimpleGestureListener {
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1";
-
-    private final String level2Text =
-            "1, 1, 1, 1, 1, 1, 1, 1, 1, 0,\n" +
-            "1, 0, 0, 0, 0, 0, 0, 0, 1, 0,\n" +
-            "1, 0, 2, 3, 3, 2, 1, 0, 1, 0,\n" +
-            "1, 0, 1, 3, 2, 3, 2, 0, 1, 0,\n" +
-            "1, 0, 2, 3, 3, 2, 4, 0, 1, 0,\n" +
-            "1, 0, 1, 3, 2, 3, 2, 0, 1, 0,\n" +
-            "1, 0, 2, 3, 3, 2, 1, 0, 1, 0,\n" +
-            "1, 0, 0, 0, 0, 0, 0, 0, 1, 0,\n" +
-            "1, 0, 0, 0, 0, 0, 0, 0, 1, 0,\n" +
-            "1, 1, 1, 1, 1, 1, 1, 1, 1, 0,\n" +
-            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +139,6 @@ public class MainActivity extends Activity implements SimpleGestureListener {
                 //gameView.moveUp();
                 break;
         }
-
         //gameView.update();
     }
 

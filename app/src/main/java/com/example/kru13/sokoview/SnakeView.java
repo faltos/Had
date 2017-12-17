@@ -1,10 +1,12 @@
 package com.example.kru13.sokoview;
 
+import android.os.Vibrator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +19,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class SnakeView extends View {
 
+    MediaPlayer mp;
+    Vibrator vibration;
     private Bitmap[] bmp;
 
     private int lx = 16;
@@ -58,16 +62,25 @@ public class SnakeView extends View {
     public SnakeView(Context context) {
         super(context);
         init(context);
+
+        vibration = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        mp = MediaPlayer.create(context, R.raw.front_desk_bells_daniel_simon);
     }
 
     public SnakeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
+
+        vibration = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        mp = MediaPlayer.create(context, R.raw.front_desk_bells_daniel_simon);
     }
 
     public SnakeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+
+        vibration = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        mp = MediaPlayer.create(context, R.raw.front_desk_bells_daniel_simon);
     }
 
     void init(Context context) {
@@ -116,27 +129,23 @@ public class SnakeView extends View {
     }
 
     public void moveRight(){
-        if(currentSnakePosition % + 1 < 192){
-            newSnakePosition = currentSnakePosition + 1;
-        }
+        newSnakePosition = currentSnakePosition + 1;
+        if(newSnakePosition % 12 == 0)newSnakePosition = newSnakePosition - 12;
     }
 
     public void moveLeft(){
-        if(currentSnakePosition - 1 >= 0){
-            newSnakePosition = currentSnakePosition - 1;
-        }
+        newSnakePosition = currentSnakePosition - 1;
+        if(newSnakePosition % 12 == 11)newSnakePosition = newSnakePosition + 12;
     }
 
     public void moveUp(){
-        if(currentSnakePosition -12 >= 0){
-            newSnakePosition = currentSnakePosition - 12;
-        }
+        newSnakePosition = currentSnakePosition - 12;
+        if(newSnakePosition < 0) newSnakePosition = 180 + currentSnakePosition % 12;
     }
 
     public void moveDown(){
-        if(currentSnakePosition +12 < 192){
-            newSnakePosition = currentSnakePosition + 12;
-        }
+        newSnakePosition = currentSnakePosition + 12;
+        if(newSnakePosition >= 192) newSnakePosition = 0 + currentSnakePosition % 12;
     }
 
     public void update(){
@@ -190,20 +199,25 @@ public class SnakeView extends View {
     private void processSnakeMovement(){
         // new is wall
         if(isWallOnPosition(newSnakePosition)){
+            vibration.vibrate(500);
             return;
         }
 
         if(isSnakeOnPosition(newSnakePosition)){
+            vibration.vibrate(500);
             return;
         }
 
         if(isStarOnPosition(newSnakePosition)){
+            vibration.vibrate(500);
             updateScore = true;
             score = score + 5;
             starTaken = true;
         }
 
         if(isAppleOnPosition(newSnakePosition)){
+            vibration.vibrate(500);
+            mp.start();
             starTimerAppleEat = true;
             updateScore = true;
             score++;
