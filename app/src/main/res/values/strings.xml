@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">SokoView</string>
+    <string name="app_name">Snake</string>
+
+    <string-array name="levels_array">
+        <item>Level 1</item>
+        <item>Level 2</item>
+        <item>Level 3</item>
+        <item>Level 4</item>
+        <item>Level 5</item>
+    </string-array>
 </resources>

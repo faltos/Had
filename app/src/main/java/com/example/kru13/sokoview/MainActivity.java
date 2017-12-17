@@ -24,15 +24,12 @@ import java.util.Arrays;
 
 public class MainActivity extends Activity implements SimpleGestureListener {
 
-
-
     Handler handlerForMove = new Handler();
-
-    private boolean pauseGame = false;
 
     private SimpleGestureFilter detector;
     private SnakeView gameView;
     private TextView infoText;
+    private int levelSelected = 1;
 
     private final String level1Text =
             "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
@@ -54,6 +51,24 @@ public class MainActivity extends Activity implements SimpleGestureListener {
 
     private final String level2Text =
             "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,\n" +
+            "0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1";
+
+    private final String level3Text =
+            "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,\n" +
             "1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
@@ -70,6 +85,42 @@ public class MainActivity extends Activity implements SimpleGestureListener {
             "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
             "1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1";
 
+    private final String level4Text =
+            "1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,\n" +
+            "1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,\n" +
+            "1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1";
+
+    private final String level5Text =
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n" +
+            "0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +131,9 @@ public class MainActivity extends Activity implements SimpleGestureListener {
         try {
             saveLevel("level1.txt", level1Text);
             saveLevel("level2.txt", level2Text);
+            saveLevel("level3.txt", level3Text);
+            saveLevel("level4.txt", level4Text);
+            saveLevel("level5.txt", level5Text);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,6 +142,9 @@ public class MainActivity extends Activity implements SimpleGestureListener {
         try {
             gameView.level1 = readLevel("level1.txt").toArray(gameView.level1);
             gameView.level2 = readLevel("level2.txt").toArray(gameView.level2);
+            gameView.level3 = readLevel("level3.txt").toArray(gameView.level2);
+            gameView.level4 = readLevel("level4.txt").toArray(gameView.level2);
+            gameView.level5 = readLevel("level5.txt").toArray(gameView.level2);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,7 +154,7 @@ public class MainActivity extends Activity implements SimpleGestureListener {
 
         // info
         infoText = (TextView)findViewById(R.id.info_text);
-        infoText.setText("Level: 1  Score: 0");
+        infoText.setText("Level: " + levelSelected + "  Score: 0");
 
         gameView.snakeBody.add(14);
 
@@ -200,7 +257,7 @@ public class MainActivity extends Activity implements SimpleGestureListener {
         public void run() {
 
             if(gameView.updateScore == true) {
-                infoText.setText("Level: 1  Score: " + gameView.score);
+                infoText.setText("Level: " + levelSelected + "  Score: " + gameView.score);
                 gameView.updateScore = false;
             }
 

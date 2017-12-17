@@ -54,8 +54,10 @@ public class SnakeView extends View {
     public ArrayList<Integer> snakeBody = new ArrayList<>();
 
     Integer level1[] = new Integer[192];
-
-    Integer level2[] = new Integer[100];
+    Integer level2[] = new Integer[192];
+    Integer level3[] = new Integer[192];
+    Integer level4[] = new Integer[192];
+    Integer level5[] = new Integer[192];
 
     Integer[] levelGame;
 
