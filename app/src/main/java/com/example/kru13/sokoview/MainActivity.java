@@ -128,6 +128,15 @@ public class MainActivity extends Activity implements SimpleGestureListener {
         setContentView(R.layout.activity_main);
         gameView = (SnakeView)findViewById(R.id.game_view);
 
+        Bundle extras = getIntent().getExtras();
+        if(extras !=null) {
+            gameView.speed = extras.getInt("speed");
+            levelSelected = extras.getInt("level");
+            gameView.levelOfTheGame = levelSelected;
+            gameView.soundOn = extras.getBoolean("sound");
+            gameView.vibrationOn = extras.getBoolean("vibration");
+        }
+
         // save levels
         try {
             saveLevel("level1.txt", level1Text);
@@ -143,14 +152,31 @@ public class MainActivity extends Activity implements SimpleGestureListener {
         try {
             gameView.level1 = readLevel("level1.txt").toArray(gameView.level1);
             gameView.level2 = readLevel("level2.txt").toArray(gameView.level2);
-            gameView.level3 = readLevel("level3.txt").toArray(gameView.level2);
-            gameView.level4 = readLevel("level4.txt").toArray(gameView.level2);
-            gameView.level5 = readLevel("level5.txt").toArray(gameView.level2);
+            gameView.level3 = readLevel("level3.txt").toArray(gameView.level3);
+            gameView.level4 = readLevel("level4.txt").toArray(gameView.level4);
+            gameView.level5 = readLevel("level5.txt").toArray(gameView.level5);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        gameView.levelGame = Arrays.copyOf(gameView.level1, gameView.level1.length);
+        switch (levelSelected) {
+            case 1:
+                gameView.levelGame = Arrays.copyOf(gameView.level1, gameView.level1.length);
+                break;
+            case 2:
+                gameView.levelGame = Arrays.copyOf(gameView.level2, gameView.level2.length);
+                break;
+            case 3:
+                gameView.levelGame = Arrays.copyOf(gameView.level3, gameView.level3.length);
+                break;
+            case 4:
+                gameView.levelGame = Arrays.copyOf(gameView.level4, gameView.level4.length);
+                break;
+            case 5:
+                gameView.levelGame = Arrays.copyOf(gameView.level5, gameView.level5.length);
+                break;
+        }
+
         //gameView.levelGame = Arrays.copyOf(gameView.currentLevel, gameView.currentLevel.length);
 
         // info
@@ -174,33 +200,26 @@ public class MainActivity extends Activity implements SimpleGestureListener {
     @Override
     public void onSwipe(int direction) {
 
-        //Detect the swipe gestures and move
         switch (direction) {
             case SimpleGestureFilter.SWIPE_RIGHT:
                 if(gameView.typeOfMove != 'L')gameView.typeOfMove = 'R';
                 else return;
-                //gameView.moveRight();
                 break;
             case SimpleGestureFilter.SWIPE_LEFT:
                 if(gameView.typeOfMove != 'R')gameView.typeOfMove = 'L';
                 else return;
-                //gameView.moveLeft();
                 break;
             case SimpleGestureFilter.SWIPE_DOWN:
                 if(gameView.typeOfMove != 'U')gameView.typeOfMove = 'D';
                 else return;
-                //gameView.moveDown();
                 break;
             case SimpleGestureFilter.SWIPE_UP:
                 if(gameView.typeOfMove != 'D')gameView.typeOfMove = 'U';
                 else return;
-                //gameView.moveUp();
                 break;
         }
-        //gameView.update();
     }
 
-    //level 2 when double tapped on screen
     @Override
     public void onDoubleTap() {
         handlerForMove.removeCallbacks(runnableCode);
@@ -260,13 +279,15 @@ public class MainActivity extends Activity implements SimpleGestureListener {
                 gameView.updateScore = false;
             }
 
-            gameView.starSpawning();
-            gameView.moveSnake();
-            gameView.update();
             if(gameView.endGame == true){
                 endGame();
             }
-            handlerForMove.postDelayed(this, gameView.speed);
+            else {
+                gameView.starSpawning();
+                gameView.moveSnake();
+                gameView.update();
+                handlerForMove.postDelayed(this, gameView.speed);
+            }
         }
     };
 
@@ -279,7 +300,6 @@ public class MainActivity extends Activity implements SimpleGestureListener {
                 .setPositiveButton("continue", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        handlerForMove.post(runnableCode);
                         Intent settingsActivity = new Intent(getApplicationContext(), SettingsActivity.class);
                         startActivity(settingsActivity);
                     }

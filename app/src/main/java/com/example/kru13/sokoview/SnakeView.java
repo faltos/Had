@@ -52,6 +52,7 @@ public class SnakeView extends View {
     public char typeOfMove = 'R'; // Up, Down, Left, Right
     public int speed = 200;
     public int score = 0;
+    public int levelOfTheGame = 1;
 
 
     public ArrayList<Integer> snakeBody = new ArrayList<>();
